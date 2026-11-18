@@ -110,7 +110,7 @@ const CONFIG = {
   /* ===== File pill ===== */
   .fwrap{display:inline-flex;align-items:stretch;border:1px solid var(--line);border-radius:11px;background:#fff;overflow:hidden;transition:all .15s}
   .fwrap:hover{border-color:#c7cfe0;box-shadow:0 4px 12px rgba(30,58,138,.08)}
-  .file{display:inline-flex;align-items:center;gap:9px;padding:9px 14px 9px 10px;text-decoration:none;color:var(--ink);font-size:14px;font-weight:500}
+  .file{display:inline-flex;align-items:center;gap:9px;padding:9px 10px 9px 14px;text-decoration:none;color:var(--ink);font-size:14px;font-weight:500}
   a.file:hover{color:var(--navy)}
   .file.off{color:#94a3b8;cursor:default}
   .file.off i{font-style:normal;font-size:12px}
@@ -340,7 +340,7 @@ const CONFIG = {
       '<button class="chip" data-act="type" data-t="html">HTML</button><button class="chip" data-act="type" data-t="pdf">PDF</button></div>' +
       (admin ? '<button class="add" data-act="new">+ Thêm tài liệu</button>' : '') + '</div>' +
       (admin ? '<div class="tabs"><button class="tab on" data-act="tab" data-t="files">Tài liệu</button>' +
-        '<button class="tab" data-act="tab" data-t="reports">Báo lỗi <span id="nbad"></span></button></div>' : '') +
+        '<button class="tab" data-act="tab" data-t="reports">Góp ý GV <span id="nbad"></span></button></div>' : '') +
       '</header><div class="wrap"><nav id="nav"></nav><main id="main"></main></div>';
     $('#q').addEventListener('input', function () { S.q = this.value.trim(); renderContent(); });
     renderContent();
@@ -410,12 +410,12 @@ const CONFIG = {
     var h = href(f);
     var tag = '<span class="tag ' + t + '">' + ICON[t] + t.toUpperCase() + '</span>';
     var main = h
-      ? '<a class="file" target="_blank" rel="noopener" href="' + esc(h) + '">' + tag + esc(f.name) + '</a>'
-      : '<span class="file off">' + tag + esc(f.name) + ' <i>· đang cập nhật</i></span>';
-    var flag = S.flagged.indexOf(f.id) > -1 ? '<span class="warn" title="Đã có GV báo lỗi – admin đang kiểm tra">⚠</span>' : '';
+      ? '<a class="file" target="_blank" rel="noopener" href="' + esc(h) + '">' + esc(f.name) + tag + '</a>'
+      : '<span class="file off">' + esc(f.name) + tag + ' <i>· đang cập nhật</i></span>';
+    var flag = S.flagged.indexOf(f.id) > -1 ? '<span class="warn" title="Đã có GV góp ý – admin đang kiểm tra">⚠</span>' : '';
     var tools = S.role === 'admin'
       ? '<button class="ic" data-act="edit" data-id="' + esc(f.id) + '" title="Sửa">✎ Sửa</button><button class="ic danger" data-act="del" data-id="' + esc(f.id) + '" title="Xoá">Xoá</button>'
-      : '<button class="ic" data-act="report" data-id="' + esc(f.id) + '" title="Báo lỗi file này">⚑ Báo lỗi</button>';
+      : '<button class="ic" data-act="report" data-id="' + esc(f.id) + '" title="Góp ý về file này">✎ Góp ý</button>';
     return '<div class="fwrap">' + main + flag + tools + '</div>';
   }
 
@@ -424,7 +424,7 @@ const CONFIG = {
     var list = S.reports.slice().reverse().filter(function (r) { return S.fb === 'all' || r.status !== 'Đã sửa'; });
     var bar = '<div class="rep-bar"><button class="chip ' + (S.fb === 'open' ? 'on' : '') + '" data-act="fb" data-v="open">Chưa xử lý xong</button>' +
       '<button class="chip ' + (S.fb === 'all' ? 'on' : '') + '" data-act="fb" data-v="all">Tất cả</button></div>';
-    if (!list.length) return bar + '<div class="empty">Không có báo lỗi nào.</div>';
+    if (!list.length) return bar + '<div class="empty">Chưa có góp ý nào.</div>';
     return bar + list.map(function (r) {
       var cls = r.status === 'Đang xử lý' ? 'st-dang' : (r.status === 'Đã sửa' ? 'st-da' : '');
       var f = fileById(r.fileId), h = f ? href(f) : '';
@@ -484,19 +484,19 @@ const CONFIG = {
   }
 
   function reportForm(f) {
-    modal('<h3>Báo lỗi tài liệu</h3>' +
+    modal('<h3>Góp ý tài liệu</h3>' +
       '<div class="finfo"><b>' + esc(f.book) + '</b> · ' + esc(/^\d/.test(f.unit) ? 'Unit ' + f.unit : f.unit) + ' · ' + esc(f.name) + ' (' + f.type.toUpperCase() + ')</div>' +
-      '<form id="rf"><label>Họ tên giáo viên<input name="teacher" value="' + esc(S.teacher) + '" placeholder="VD: Nguyễn Thị A" required></label>' +
+      '<form id="rf"><label>Họ tên giáo viên (không bắt buộc)<input name="teacher" value="' + esc(S.teacher) + '"></label>' +
       '<label>Loại lỗi<select name="issue">' + ISSUES.map(function (i) { return '<option>' + esc(i) + '</option>'; }).join('') + '</select></label>' +
       '<label>Mô tả chi tiết<textarea name="content" placeholder="VD: Câu 5 trang 2 đáp án sai, phải là B" required></textarea></label>' +
-      '<div class="mact"><button type="button" data-act="close">Huỷ</button><button class="pri">Gửi báo lỗi</button></div></form>');
+      '<div class="mact"><button type="button" data-act="close">Huỷ</button><button class="pri">Gửi góp ý</button></div></form>');
     $('#rf').onsubmit = function (ev) {
       ev.preventDefault();
       var fd = new FormData(this);
       S.teacher = String(fd.get('teacher') || '').trim(); save();
       busy(true);
-      api('report', { teacher: S.teacher, fileId: f.id, issue: fd.get('issue'), content: fd.get('content') })
-        .then(function () { closeModal(); toast('Đã gửi báo lỗi. Cảm ơn thầy/cô!'); return refresh(true); })
+      api('report', { teacher: S.teacher || 'Không ghi tên', fileId: f.id, issue: fd.get('issue'), content: fd.get('content') })
+        .then(function () { closeModal(); toast('Đã gửi góp ý. Cảm ơn thầy/cô!'); return refresh(true); })
         .catch(function (e) { busy(false); toast(e.message); });
     };
   }
