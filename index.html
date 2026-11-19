@@ -425,7 +425,7 @@ const CONFIG = {
 
   function folderBtn(b) {
     var link = b.folder && String(b.folder.link || '').trim();
-    var out = link ? '<a class="fold" target="_blank" rel="noopener" href="' + esc(link) + '">📁 Thư mục cả cuốn</a>' : '';
+    var out = link ? '<a class="fold" target="_blank" rel="noopener" href="' + esc(link) + '">📁 ' + esc(String(b.folder.name || '').trim() || 'Thư mục cả cuốn') + '</a>' : '';
     if (S.role === 'admin') out += '<button class="fold fold-ed" data-act="folder" data-b="' + esc(b.book) + '">' + (link ? '✎ Sửa link thư mục' : '+ Gắn link thư mục') + '</button>';
     return out;
   }
@@ -433,14 +433,17 @@ const CONFIG = {
   function folderForm(book) {
     var b = books().filter(function (x) { return x.book === book; })[0];
     var f = b && b.folder;
-    modal('<h3>Link thư mục cả cuốn</h3><div class="finfo"><b>' + esc(book) + '</b></div><form id="fdf">' +
+    modal('<h3>Thư mục cả cuốn</h3><div class="finfo"><b>' + esc(book) + '</b></div><form id="fdf">' +
+      '<label>Tên hiển thị<input name="fname" value="' + esc(f ? f.name : '') + '" placeholder="VD: Thư mục cả cuốn, Toàn bộ file Grammar 3A"><div class="hint">Để trống → "Thư mục cả cuốn"</div></label>' +
       '<label>Link thư mục (Google Drive / Dropbox)<input name="link" value="' + esc(f ? f.link : '') + '" placeholder="https://drive.google.com/drive/folders/..."><div class="hint">Để trống rồi Lưu để gỡ link</div></label>' +
       '<div class="mact"><button type="button" data-act="close">Huỷ</button><button class="pri">Lưu</button></div></form>');
     $('#fdf').onsubmit = function (ev) {
       ev.preventDefault();
-      var link = String(new FormData(this).get('link') || '').trim();
+      var fdx = new FormData(this);
+      var link = String(fdx.get('link') || '').trim();
+      var fname = String(fdx.get('fname') || '').trim();
       if (!link && !f) { closeModal(); return; }
-      var p = saveMeta(book, { link: link });
+      var p = saveMeta(book, { link: link, name: fname || 'Thư mục cả cuốn' });
       busy(true);
       p.then(function () { closeModal(); toast('Đã lưu'); return refresh(true); })
         .catch(function (e) { busy(false); toast(e.message); });
@@ -453,7 +456,7 @@ const CONFIG = {
     var f = metaOf(book);
     if (!f) { f = { id: '', book: book, unit: FOLDER, order: 0, title: '', name: 'Thư mục cả cuốn', type: 'pdf', link: '' }; S.files.push(f); }
     Object.keys(patch).forEach(function (k) { f[k] = patch[k]; });
-    return api('saveFile', { file: { id: f.id || '', book: book, unit: FOLDER, order: String(f.order || 0), title: f.title || '', name: 'Thư mục cả cuốn', type: 'pdf', link: f.link || '' } });
+    return api('saveFile', { file: { id: f.id || '', book: book, unit: FOLDER, order: String(f.order || 0), title: f.title || '', name: String(f.name || '').trim() || 'Thư mục cả cuốn', type: 'pdf', link: f.link || '' } });
   }
   function runSaves(jobs) {
     renderContent(); busy(true);
