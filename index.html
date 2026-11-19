@@ -92,6 +92,11 @@ const CONFIG = {
   .sec-title{display:flex;align-items:baseline;gap:10px;font-family:"Playfair Display",serif;font-size:26px;font-weight:700;color:var(--navy-d);margin:26px 0 16px}
   .sec-title:first-child{margin-top:0}
   .sec-title small{font-family:"Be Vietnam Pro",sans-serif;font-size:13px;font-weight:500;color:var(--mute)}
+  .fold{align-self:center;display:inline-flex;align-items:center;gap:6px;font-family:"Be Vietnam Pro",sans-serif;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;text-decoration:none;cursor:pointer;background:var(--gold);color:var(--navy-d);border:1px solid var(--gold);transition:all .15s;box-shadow:0 2px 8px rgba(255,177,0,.3)}
+  .fold:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(255,177,0,.4)}
+  .fold-ed{background:#fff;color:var(--mute);border:1.5px dashed #cbd5e1;box-shadow:none}
+  .fold-ed:hover{color:var(--navy);border-color:var(--navy);background:var(--navy-50);box-shadow:none}
+  .sec-title{flex-wrap:wrap}
   .empty{padding:60px 20px;text-align:center;color:var(--mute);background:#fff;border:1.5px dashed var(--line);border-radius:var(--r)}
 
   /* ===== Unit card ===== */
@@ -105,22 +110,41 @@ const CONFIG = {
   .unit h3 em{display:block;font-style:normal;font-weight:400;font-size:13.5px;color:var(--mute);margin-top:2px}
   .add-sm{border:1.5px dashed #cbd5e1;background:none;border-radius:10px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--mute);transition:all .15s;white-space:nowrap}
   .add-sm:hover{border-color:var(--navy);color:var(--navy);background:var(--navy-50)}
-  .files{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .unit-h{cursor:pointer;user-select:none}
+  .u-cnt{font-size:12px;font-weight:600;color:var(--mute);background:#f1efe8;border-radius:999px;padding:3px 10px;white-space:nowrap}
+  .chev{font-size:16px;color:var(--mute);transition:transform .2s;width:20px;text-align:center}
+  .unit.open .chev{transform:rotate(180deg);color:var(--navy)}
+  .unit:not(.open) .files{display:none}
+  .unit:not(.open){padding-top:12px;padding-bottom:12px}
+  .files{display:flex;flex-direction:column;gap:6px;margin-top:12px}
 
   /* ===== File pill ===== */
-  .fwrap{display:inline-flex;align-items:stretch;border:1px solid var(--line);border-radius:11px;background:#fff;overflow:hidden;transition:all .15s}
+  .fwrap{width:100%;display:flex;align-items:stretch;border:1px solid var(--line);border-radius:11px;background:#fff;overflow:hidden;transition:all .15s}
   .fwrap:hover{border-color:#c7cfe0;box-shadow:0 4px 12px rgba(30,58,138,.08)}
-  .file{display:inline-flex;align-items:center;gap:9px;padding:9px 10px 9px 14px;text-decoration:none;color:var(--ink);font-size:14px;font-weight:500}
-  a.file:hover{color:var(--navy)}
+  .file{flex:1;display:flex;align-items:center;gap:10px;padding:11px 12px;text-decoration:none;color:var(--ink);font-size:14px;font-weight:500}
+  .file::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+  .file .fn{flex:0 1 auto}
+  a.file:hover{color:var(--navy);background:var(--navy-50)}
   .file.off{color:#94a3b8;cursor:default}
-  .file.off i{font-style:normal;font-size:12px}
-  .tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:4px 7px;border-radius:7px;letter-spacing:.04em}
+  .file.off::before{background:#cbd5e1}
+  .file.off i{font-style:normal;font-size:12px;white-space:nowrap}
+  .tag{flex-shrink:0;display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:4px 7px;border-radius:7px;letter-spacing:.04em}
   .tag svg{width:12px;height:12px}
   .tag.html{background:var(--html-bg);color:var(--html)}
   .tag.pdf{background:var(--pdf-bg);color:var(--pdf)}
   .file.off .tag{filter:grayscale(1);opacity:.6}
   .warn{display:flex;align-items:center;padding:0 8px;color:#d97706;font-size:14px;cursor:help;background:#fffbeb}
   .ic{border:0;border-left:1px solid var(--line);background:none;padding:0 11px;cursor:pointer;font-size:12.5px;font-weight:500;color:var(--mute);transition:all .15s;white-space:nowrap}
+  [data-dk]{cursor:grab}
+  [data-dk] a,[data-dk] button{cursor:pointer}
+  .dragging{opacity:.4}
+  .drop-b{box-shadow:0 -3px 0 0 var(--gold) !important}
+  .drop-a{box-shadow:0 3px 0 0 var(--gold) !important}
+  @media(max-width:820px){nav .drop-b{box-shadow:-3px 0 0 0 var(--gold) !important}nav .drop-a{box-shadow:3px 0 0 0 var(--gold) !important}}
+  .mvbox{display:inline-flex;gap:4px;align-self:center}
+  .mvb{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 9px;font-family:"Be Vietnam Pro",sans-serif;font-size:11px;font-weight:600;cursor:pointer;color:var(--mute);transition:all .15s;white-space:nowrap}
+  .mvb:hover{border-color:var(--navy);color:var(--navy);background:var(--navy-50)}
+  .ic.mv{padding:0 8px;font-size:10px}
   .ic:hover{background:var(--navy-50);color:var(--navy)}
   .ic.danger:hover{background:var(--pdf-bg);color:var(--pdf)}
 
@@ -185,8 +209,6 @@ const CONFIG = {
     .unit{padding:14px;gap:12px}
     .u-num{display:none}
     .unit-h{min-height:0}
-    .fwrap{width:100%}
-    .file{flex:1}
     .md .two{display:block}
   }
 </style>
@@ -201,7 +223,7 @@ const CONFIG = {
   var S = {
     pass: '', role: '', teacher: '',
     files: [], flagged: [], reports: [],
-    book: '', type: 'all', q: '', tab: 'files', fb: 'open', loginRole: 'gv'
+    book: '', type: 'all', q: '', tab: 'files', fb: 'open', loginRole: 'gv', open: {}
   };
   var STORE = 'gedu_tailieu_session';
   var ISSUES = ['Link không mở được', 'Sai nội dung / đáp án', 'Lỗi chính tả / định dạng', 'Thiếu trang / thiếu phần', 'Sai unit / sai sách', 'Khác'];
@@ -211,6 +233,7 @@ const CONFIG = {
     html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg>',
     pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>'
   };
+  var FOLDER = '_FOLDER'; // bản ghi đặc biệt lưu link thư mục của cả cuốn
   var NAMES = ['Bài giảng tương tác', 'Slide bài giảng', 'Phiếu bài tập', 'Phiếu dò bài', 'Đề kiểm tra', 'Đáp án', 'Giáo án'];
 
   /* ---------- tiện ích ---------- */
@@ -268,18 +291,25 @@ const CONFIG = {
   function books() {
     var map = {}, order = [];
     S.files.forEach(function (f) {
-      if (!map[f.book]) { map[f.book] = { book: f.book, units: {}, keys: [] }; order.push(f.book); }
+      if (!map[f.book]) { map[f.book] = { book: f.book, units: {}, keys: [], folder: null }; order.push(f.book); }
       var b = map[f.book];
+      if (f.unit === FOLDER) { b.folder = f; return; }
       if (!b.units[f.unit]) { b.units[f.unit] = { unit: f.unit, title: '', files: [] }; b.keys.push(f.unit); }
       var u = b.units[f.unit];
       if (f.title && !u.title) u.title = f.title;
       u.files.push(f);
     });
+    var bkey = function (n, i) { var m = map[n].folder, o = m ? Number(m.order) : 0; return o > 0 ? o : 1e6 + i; };
+    var idx = {}; order.forEach(function (n, i) { idx[n] = bkey(n, i); });
+    order.sort(function (a, c) { return idx[a] - idx[c]; });
     return order.map(function (n) {
       var b = map[n];
+      var uo = []; try { uo = JSON.parse((b.folder && b.folder.title) || '[]') || []; } catch (e) { uo = []; }
+      var upos = function (k) { var i = uo.indexOf(String(k)); return i > -1 ? i : 1e6; };
       return {
         book: n,
-        units: b.keys.sort(nat).map(function (k) {
+        folder: b.folder,
+        units: b.keys.sort(function (a, c) { return (upos(a) - upos(c)) || nat(a, c); }).map(function (k) {
           var u = b.units[k];
           u.files.sort(function (a, c) { return (a.order - c.order) || nat(a.name, c.name); });
           return u;
@@ -360,7 +390,7 @@ const CONFIG = {
     if (bks.length && !bks.some(function (b) { return b.book === S.book; })) S.book = bks[0].book;
 
     $('#nav').innerHTML = bks.map(function (b) {
-      return '<button data-act="book" data-b="' + esc(b.book) + '" class="' + (b.book === S.book && !S.q ? 'on' : '') + '">' +
+      return '<button data-act="book" data-b="' + esc(b.book) + '"' + (admin ? ' draggable="true" data-dk="book"' : '') + ' class="' + (b.book === S.book && !S.q ? 'on' : '') + '">' +
         esc(b.book) + '<span>' + b.units.length + '</span></button>';
     }).join('');
 
@@ -378,7 +408,7 @@ const CONFIG = {
           var fs = typed(u.files);
           if (fs.length && hay.indexOf(q) > -1) block += unitHtml(b.book, u, fs);
         });
-        if (block) out += '<div class="sec-title">' + esc(b.book) + '</div>' + block;
+        if (block) out += '<div class="sec-title">' + esc(b.book) + folderBtn(b) + '</div>' + block;
       });
       $('#main').innerHTML = out || '<div class="empty">Không tìm thấy tài liệu phù hợp.</div>';
       return;
@@ -389,34 +419,180 @@ const CONFIG = {
       if (fs.length) out += unitHtml(cur.book, u, fs);
     });
     var nf = cur.units.reduce(function (n, u) { return n + u.files.length; }, 0);
-    $('#main').innerHTML = '<div class="sec-title">' + esc(cur.book) + '<small>' + cur.units.length + ' unit · ' + nf + ' tài liệu</small></div>' + (out || '<div class="empty">Chưa có tài liệu loại này.</div>');
+    $('#main').innerHTML = '<div class="sec-title">' + esc(cur.book) + '<small>' + cur.units.length + ' unit · ' + nf + ' tài liệu</small>' + folderBtn(cur) +
+      (admin ? '<span class="mvbox"><button class="mvb" data-act="bmv" data-d="-1" data-b="' + esc(cur.book) + '" title="Đưa sách lên trên trong danh sách">▲ Sách</button><button class="mvb" data-act="bmv" data-d="1" data-b="' + esc(cur.book) + '" title="Đưa sách xuống dưới trong danh sách">▼ Sách</button></span>' : '') + '</div>' + (out || '<div class="empty">Chưa có tài liệu loại này.</div>');
   }
+
+  function folderBtn(b) {
+    var link = b.folder && String(b.folder.link || '').trim();
+    var out = link ? '<a class="fold" target="_blank" rel="noopener" href="' + esc(link) + '">📁 Thư mục cả cuốn</a>' : '';
+    if (S.role === 'admin') out += '<button class="fold fold-ed" data-act="folder" data-b="' + esc(b.book) + '">' + (link ? '✎ Sửa link thư mục' : '+ Gắn link thư mục') + '</button>';
+    return out;
+  }
+
+  function folderForm(book) {
+    var b = books().filter(function (x) { return x.book === book; })[0];
+    var f = b && b.folder;
+    modal('<h3>Link thư mục cả cuốn</h3><div class="finfo"><b>' + esc(book) + '</b></div><form id="fdf">' +
+      '<label>Link thư mục (Google Drive / Dropbox)<input name="link" value="' + esc(f ? f.link : '') + '" placeholder="https://drive.google.com/drive/folders/..."><div class="hint">Để trống rồi Lưu để gỡ link</div></label>' +
+      '<div class="mact"><button type="button" data-act="close">Huỷ</button><button class="pri">Lưu</button></div></form>');
+    $('#fdf').onsubmit = function (ev) {
+      ev.preventDefault();
+      var link = String(new FormData(this).get('link') || '').trim();
+      if (!link && !f) { closeModal(); return; }
+      var p = saveMeta(book, { link: link });
+      busy(true);
+      p.then(function () { closeModal(); toast('Đã lưu'); return refresh(true); })
+        .catch(function (e) { busy(false); toast(e.message); });
+    };
+  }
+
+  /* ---------- bản ghi meta của cuốn sách (_FOLDER): link = thư mục, order = thứ tự sách, title = thứ tự unit ---------- */
+  function metaOf(book) { for (var i = 0; i < S.files.length; i++) if (S.files[i].book === book && S.files[i].unit === FOLDER) return S.files[i]; return null; }
+  function saveMeta(book, patch) {
+    var f = metaOf(book);
+    if (!f) { f = { id: '', book: book, unit: FOLDER, order: 0, title: '', name: 'Thư mục cả cuốn', type: 'pdf', link: '' }; S.files.push(f); }
+    Object.keys(patch).forEach(function (k) { f[k] = patch[k]; });
+    return api('saveFile', { file: { id: f.id || '', book: book, unit: FOLDER, order: String(f.order || 0), title: f.title || '', name: 'Thư mục cả cuốn', type: 'pdf', link: f.link || '' } });
+  }
+  function runSaves(jobs) {
+    renderContent(); busy(true);
+    jobs.reduce(function (p, job) { return p.then(job); }, Promise.resolve())
+      .then(function () { return refresh(true); })
+      .catch(function (e) { busy(false); toast(e.message); refresh(true); });
+  }
+  function swapIn(arr, item, dir) {
+    var i = arr.indexOf(item), j = i + dir;
+    if (i < 0 || j < 0 || j >= arr.length) return null;
+    arr = arr.slice(); arr[i] = arr[j]; arr[j] = item; return arr;
+  }
+  function unitKeys(book) {
+    var b = books().filter(function (x) { return x.book === book; })[0];
+    return b ? b.units.map(function (u) { return String(u.unit); }) : [];
+  }
+  function setUnitOrder(book, keys) {
+    runSaves([function () { return saveMeta(book, { title: JSON.stringify(keys) }); }]);
+  }
+  function setBookOrder(names) {
+    var jobs = [];
+    names.forEach(function (n, k) {
+      var m = metaOf(n);
+      if (!m || Number(m.order) !== k + 1) jobs.push(function () { return saveMeta(n, { order: k + 1 }); });
+    });
+    runSaves(jobs);
+  }
+  function moveUnit(book, unit, dir) { var k = swapIn(unitKeys(book), String(unit), dir); if (k) setUnitOrder(book, k); }
+  function moveBook(book, dir) { var n = swapIn(books().map(function (b) { return b.book; }), book, dir); if (n) setBookOrder(n); }
+
+  // Mục chỉ là số (dữ liệu cũ) → "Unit N"; còn lại hiển thị đúng như admin nhập
+  function uLabel(u) { u = String(u == null ? '' : u).trim(); return /^\d+$/.test(u) ? 'Unit ' + u : u; }
+
+  /* ---------- sắp xếp thứ tự file trong mục ---------- */
+  function unitFiles(f) {
+    return S.files.filter(function (x) { return x.book === f.book && x.unit === f.unit; })
+      .sort(function (a, c) { return (Number(a.order) - Number(c.order)) || nat(a.name, c.name); });
+  }
+  function setFileOrder(list) {
+    var jobs = [];
+    list.forEach(function (x, k) {
+      if (Number(x.order) !== k + 1) {
+        x.order = k + 1;
+        jobs.push(function () { return api('saveFile', { file: { id: x.id, book: x.book, unit: x.unit, order: String(x.order), title: x.title || '', name: x.name, type: x.type, link: x.link || '' } }); });
+      }
+    });
+    if (jobs.length) runSaves(jobs);
+  }
+  function moveFile(id, dir) {
+    var f = fileById(id); if (!f) return;
+    var l = swapIn(unitFiles(f), f, dir); if (l) setFileOrder(l);
+  }
+
+  /* ---------- kéo thả (admin, máy tính) ---------- */
+  var DRAG = null;
+  function dragInfo(el) {
+    var k = el.dataset.dk;
+    if (k === 'file') { var f = fileById(el.dataset.id); return f ? { kind: k, id: f.id, grp: f.book + '|' + f.unit } : null; }
+    if (k === 'unit') return { kind: k, id: el.dataset.u, grp: el.dataset.b };
+    if (k === 'book') return { kind: k, id: el.dataset.b, grp: '' };
+    return null;
+  }
+  function clearDropMarks() { document.querySelectorAll('.drop-b,.drop-a,.dragging').forEach(function (x) { x.classList.remove('drop-b', 'drop-a', 'dragging'); }); }
+  function dropTarget(ev) {
+    if (!DRAG || !ev.target.closest) return null;
+    var el = ev.target.closest('[data-dk="' + DRAG.kind + '"]');
+    if (!el) return null;
+    var info = dragInfo(el);
+    if (!info || info.grp !== DRAG.grp || info.id === DRAG.id) return null;
+    var r = el.getBoundingClientRect();
+    var after = DRAG.kind === 'book' && window.innerWidth <= 820 ? ev.clientX > r.left + r.width / 2 : ev.clientY > r.top + r.height / 2;
+    return { el: el, info: info, after: after };
+  }
+  document.addEventListener('dragstart', function (ev) {
+    var el = ev.target.closest && ev.target.closest('[data-dk]');
+    if (!el || S.role !== 'admin') return;
+    DRAG = dragInfo(el); if (!DRAG) return;
+    ev.stopPropagation();
+    ev.dataTransfer.effectAllowed = 'move';
+    try { ev.dataTransfer.setData('text/plain', DRAG.id); } catch (e) {}
+    setTimeout(function () { el.classList.add('dragging'); }, 0);
+  });
+  document.addEventListener('dragover', function (ev) {
+    var t = dropTarget(ev); if (!t) return;
+    ev.preventDefault(); ev.dataTransfer.dropEffect = 'move';
+    document.querySelectorAll('.drop-b,.drop-a').forEach(function (x) { x.classList.remove('drop-b', 'drop-a'); });
+    t.el.classList.add(t.after ? 'drop-a' : 'drop-b');
+  });
+  document.addEventListener('drop', function (ev) {
+    var t = dropTarget(ev); if (!t) return;
+    ev.preventDefault();
+    var d = DRAG; DRAG = null; clearDropMarks();
+    function place(arr, id) {
+      arr = arr.filter(function (x) { return x !== d.id; });
+      var i = arr.indexOf(id); arr.splice(t.after ? i + 1 : i, 0, d.id); return arr;
+    }
+    if (d.kind === 'unit') setUnitOrder(d.grp, place(unitKeys(d.grp), String(t.info.id)));
+    else if (d.kind === 'book') setBookOrder(place(books().map(function (b) { return b.book; }), t.info.id));
+    else if (d.kind === 'file') {
+      var f = fileById(d.id);
+      var ids = place(unitFiles(f).map(function (x) { return x.id; }), t.info.id);
+      setFileOrder(ids.map(fileById));
+    }
+  });
+  document.addEventListener('dragend', function () { DRAG = null; clearDropMarks(); });
 
   function typed(fs) { return fs.filter(function (f) { return S.type === 'all' || f.type === S.type; }); }
 
   function unitHtml(book, u, fs) {
     var admin = S.role === 'admin';
-    var isNum = /^\d/.test(u.unit);
-    var badge = isNum ? '<small>Unit</small>' + esc(u.unit) : esc(String(u.unit).slice(0, 3));
-    var name = isNum ? 'Unit ' + u.unit : u.unit;
-    return '<div class="unit"><div class="u-num">' + badge + '</div><div class="u-body"><div class="unit-h"><h3>' + esc(name) +
+    var name = uLabel(u.unit);
+    var m = name.match(/^(.*?)\s*(\d+)\s*$/);
+    var badge = m ? (m[1] ? '<small>' + esc(m[1].slice(0, 6)) + '</small>' : '') + esc(m[2]) : esc(name.slice(0, 3));
+    var key = book + '|' + u.unit;
+    var open = !!S.q || !!S.open[key];
+    var dragU = admin && !S.q ? ' draggable="true" data-dk="unit" data-b="' + esc(book) + '" data-u="' + esc(u.unit) + '"' : '';
+    return '<div class="unit' + (open ? ' open' : '') + '"' + dragU + '><div class="u-num">' + badge + '</div><div class="u-body"><div class="unit-h" data-act="toggle" data-k="' + esc(key) + '"><h3>' + esc(name) +
       (u.title ? '<em>' + esc(u.title) + '</em>' : '') + '</h3>' +
+      '<span class="u-cnt">' + fs.length + ' file</span>' +
+      (admin && !S.q ? '<span class="mvbox"><button class="mvb" data-act="umv" data-d="-1" data-b="' + esc(book) + '" data-u="' + esc(u.unit) + '" title="Đưa unit lên">▲</button><button class="mvb" data-act="umv" data-d="1" data-b="' + esc(book) + '" data-u="' + esc(u.unit) + '" title="Đưa unit xuống">▼</button></span>' : '') +
       (admin ? '<button class="add-sm" data-act="addto" data-b="' + esc(book) + '" data-u="' + esc(u.unit) + '" data-ti="' + esc(u.title) + '">+ Thêm file</button>' : '') +
-      '</div><div class="files">' + fs.map(fileHtml).join('') + '</div></div></div>';
+      '<span class="chev">▾</span></div><div class="files">' + fs.map(fileHtml).join('') + '</div></div></div>';
   }
 
   function fileHtml(f) {
     var t = f.type === 'html' ? 'html' : 'pdf';
     var h = href(f);
     var tag = '<span class="tag ' + t + '">' + ICON[t] + t.toUpperCase() + '</span>';
+    var fn = '<span class="fn" title="' + esc(f.name) + '">' + esc(f.name) + '</span>';
     var main = h
-      ? '<a class="file" target="_blank" rel="noopener" href="' + esc(h) + '">' + esc(f.name) + tag + '</a>'
-      : '<span class="file off">' + esc(f.name) + tag + ' <i>· đang cập nhật</i></span>';
+      ? '<a class="file" target="_blank" rel="noopener" href="' + esc(h) + '">' + fn + tag + '</a>'
+      : '<span class="file off">' + fn + '<i>đang cập nhật</i>' + tag + '</span>';
     var flag = S.flagged.indexOf(f.id) > -1 ? '<span class="warn" title="Đã có GV góp ý – admin đang kiểm tra">⚠</span>' : '';
     var tools = S.role === 'admin'
-      ? '<button class="ic" data-act="edit" data-id="' + esc(f.id) + '" title="Sửa">✎ Sửa</button><button class="ic danger" data-act="del" data-id="' + esc(f.id) + '" title="Xoá">Xoá</button>'
+      ? '<button class="ic mv" data-act="mv" data-d="-1" data-id="' + esc(f.id) + '" title="Lên trên">▲</button><button class="ic mv" data-act="mv" data-d="1" data-id="' + esc(f.id) + '" title="Xuống dưới">▼</button>' +
+        '<button class="ic" data-act="edit" data-id="' + esc(f.id) + '" title="Sửa">✎</button><button class="ic danger" data-act="del" data-id="' + esc(f.id) + '" title="Xoá">✕</button>'
       : '<button class="ic" data-act="report" data-id="' + esc(f.id) + '" title="Góp ý về file này">✎ Góp ý</button>';
-    return '<div class="fwrap">' + main + flag + tools + '</div>';
+    var dragF = S.role === 'admin' && !S.q ? ' draggable="true" data-dk="file" data-id="' + esc(f.id) + '"' : '';
+    return '<div class="fwrap"' + dragF + '>' + main + flag + tools + '</div>';
   }
 
   /* ---------- tab báo lỗi (admin) ---------- */
@@ -429,7 +605,7 @@ const CONFIG = {
       var cls = r.status === 'Đang xử lý' ? 'st-dang' : (r.status === 'Đã sửa' ? 'st-da' : '');
       var f = fileById(r.fileId), h = f ? href(f) : '';
       return '<div class="rep ' + cls + '" data-rid="' + esc(r.id) + '">' +
-        '<div class="rep-h"><b>' + esc(r.book) + ' · ' + esc(/^\d/.test(r.unit) ? 'Unit ' + r.unit : r.unit) + ' · ' + esc(r.fileName) + '</b>' +
+        '<div class="rep-h"><b>' + esc(r.book) + ' · ' + esc(uLabel(r.unit)) + ' · ' + esc(r.fileName) + '</b>' +
         '<span>' + esc(r.time) + ' · ' + esc(r.teacher) + '</span></div>' +
         '<div class="rep-b"><span class="pill">' + esc(r.issue) + '</span>' + esc(r.content) + '</div>' +
         '<div class="rep-f"><select class="r-st">' + STATUSES.map(function (s) {
@@ -462,8 +638,8 @@ const CONFIG = {
     modal('<h3>' + (f.id ? 'Sửa tài liệu' : 'Thêm tài liệu') + '</h3><form id="ff">' +
       '<input type="hidden" name="id" value="' + esc(f.id || '') + '">' +
       '<label>Sách / Chương trình<input name="book" list="dl-b" value="' + esc(f.book || '') + '" placeholder="VD: Grammar 3A" required></label>' +
-      '<div class="two"><label>Unit<input name="unit" value="' + esc(f.unit || '') + '" placeholder="VD: 1" required></label>' +
-      '<label>Thứ tự trong unit<input name="order" type="number" value="' + esc(f.order || 0) + '"></label></div>' +
+      '<div class="two"><label>Mục (Unit / Review…)<input name="unit" value="' + esc(f.unit ? uLabel(f.unit) : '') + '" placeholder="VD: Unit 1, Review 1, Midterm" required><div class="hint">Ghi đúng tên muốn hiển thị</div></label>' +
+      '<label>Thứ tự trong mục<input name="order" type="number" value="' + esc(f.order || 0) + '"></label></div>' +
       '<label>Tiêu đề unit<input name="title" value="' + esc(f.title || '') + '" placeholder="VD: Present Progressive & Simple Present"><div class="hint">Áp dụng cho cả unit</div></label>' +
       '<div class="two"><label>Tên file<input name="name" list="dl-n" value="' + esc(f.name || '') + '" placeholder="VD: Phiếu bài tập" required></label>' +
       '<label>Loại<select name="type"><option value="html">HTML</option><option value="pdf">PDF</option></select></label></div>' +
@@ -485,7 +661,7 @@ const CONFIG = {
 
   function reportForm(f) {
     modal('<h3>Góp ý tài liệu</h3>' +
-      '<div class="finfo"><b>' + esc(f.book) + '</b> · ' + esc(/^\d/.test(f.unit) ? 'Unit ' + f.unit : f.unit) + ' · ' + esc(f.name) + ' (' + f.type.toUpperCase() + ')</div>' +
+      '<div class="finfo"><b>' + esc(f.book) + '</b> · ' + esc(uLabel(f.unit)) + ' · ' + esc(f.name) + ' (' + f.type.toUpperCase() + ')</div>' +
       '<form id="rf"><label>Họ tên giáo viên (không bắt buộc)<input name="teacher" value="' + esc(S.teacher) + '"></label>' +
       '<label>Loại lỗi<select name="issue">' + ISSUES.map(function (i) { return '<option>' + esc(i) + '</option>'; }).join('') + '</select></label>' +
       '<label>Mô tả chi tiết<textarea name="content" placeholder="VD: Câu 5 trang 2 đáp án sai, phải là B" required></textarea></label>' +
@@ -525,12 +701,20 @@ const CONFIG = {
       el.classList.add('on'); S.tab = el.dataset.t; renderContent();
     }
     else if (a === 'fb') { S.fb = el.dataset.v; renderContent(); }
+    else if (a === 'mv') moveFile(el.dataset.id, Number(el.dataset.d));
+    else if (a === 'umv') moveUnit(el.dataset.b, el.dataset.u, Number(el.dataset.d));
+    else if (a === 'bmv') moveBook(el.dataset.b, Number(el.dataset.d));
+    else if (a === 'toggle') {
+      var k = el.dataset.k; S.open[k] = !S.open[k];
+      el.closest('.unit').classList.toggle('open', S.open[k] || !!S.q);
+    }
+    else if (a === 'folder') folderForm(el.dataset.b);
     else if (a === 'new') fileForm({ book: S.book });
     else if (a === 'addto') fileForm({ book: el.dataset.b, unit: el.dataset.u, title: el.dataset.ti });
     else if (a === 'edit') { var f = fileById(el.dataset.id); if (f) fileForm(f); }
     else if (a === 'del') {
       var fd = fileById(el.dataset.id);
-      if (!fd || !confirm('Xoá "' + fd.name + '" – ' + fd.book + ' Unit ' + fd.unit + '?')) return;
+      if (!fd || !confirm('Xoá "' + fd.name + '" – ' + fd.book + ' – ' + uLabel(fd.unit) + '?')) return;
       busy(true);
       api('deleteFile', { id: fd.id }).then(function () { toast('Đã xoá'); return refresh(true); })
         .catch(function (e) { busy(false); toast(e.message); });
